@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Eats | Descubra a Gastronomia Local</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Icones -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <header class="glass-header">
+        <div class="container header-container">
+            <h1 class="logo">Local<span class="accent">Eats</span></h1>
+            <nav>
+                <a href="index.html" class="active">Explorar</a>
+                <a href="profile.html">Meus Favoritos</a>
+            </nav>
+            <div class="user-mock" id="userBadge">
+                <i class="ri-user-smile-line"></i> Visitante
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h2>Descubra sabores incríveis na sua cidade</h2>
+            <p>Apoie os restaurantes locais e encontre as melhores opções gastronômicas perto de você.</p>
+            
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Buscar por culinária ou localização...">
+                <!-- SMELL VISUAL INTENCIONAL: O botão tem péssimo contraste intencionalmente para teste em Qualidade de Software -->
+                <button id="searchBtn" class="search-btn-ugly-contrast">Buscar</button>
+            </div>
+            
+            <div class="filters">
+                <button class="filter-btn active" data-cuisine="">Todos</button>
+                <button class="filter-btn" data-cuisine="Italiana">Italiana</button>
+                <button class="filter-btn" data-cuisine="Japonesa">Japonesa</button>
+                <button class="filter-btn" data-cuisine="Brasileira">Brasileira</button>
+                <button class="filter-btn" data-cuisine="Mexicana">Mexicana</button>
+            </div>
+        </section>
+
+        <section class="restaurant-grid" id="restaurantGrid">
+            <!-- Cargado via JS -->
+            <div class="loading">Carregando os melhores restaurantes...</div>
+        </section>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

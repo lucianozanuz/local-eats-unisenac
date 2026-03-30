@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil | Local Eats</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <header class="glass-header">
+        <div class="container header-container">
+            <h1 class="logo"><a href="index.html" style="text-decoration:none; color:inherit;">Local<span class="accent">Eats</span></a></h1>
+            <nav>
+                <a href="index.html">Explorar</a>
+                <a href="profile.html" class="active">Meus Favoritos</a>
+            </nav>
+            <div class="user-mock" id="userBadge">
+                <i class="ri-user-smile-line"></i> Visitante
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="profile-header">
+            <div class="avatar-circle"><i class="ri-user-star-line"></i></div>
+            <div class="user-details">
+                <h2 id="userNameProfile">Membro Local Eats</h2>
+                <p>Amante da boa gastronomia</p>
+            </div>
+        </section>
+        
+        <h3 class="section-title">Restaurantes Favoritos</h3>
+        <!-- SMELL DE CARREGAMENTO: Se a API falhar no endpoint fav, a tela não mostrará mensagens amigaveis, quebrando o layout -->
+        <section class="restaurant-grid" id="favoritesGrid">
+            <div class="loading">Carregando seus locais do coração...</div>
+        </section>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
