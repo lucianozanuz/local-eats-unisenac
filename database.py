@@ -2,8 +2,12 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# Code Smell: Hardcoded URL inside the database file, no environment variable
-SQLALCHEMY_DATABASE_URL = "sqlite:///./local_eats.db"
+import os
+
+# Adaptado para Vercel: Ambientes Serverless possuem sistema de arquivos "Read-Only" (somente leitura).
+# A única pasta com permissão de escrita nesses ambientes de nuvem é a "/tmp".
+database_path = "/tmp/local_eats.db" if os.environ.get("VERCEL") else "./local_eats.db"
+SQLALCHEMY_DATABASE_URL = f"sqlite:///{database_path}"
 
 # Smell: Check_same_thread=False is needed for standard SQLite in FastAPI, but pooling is not optimized
 engine = create_engine(

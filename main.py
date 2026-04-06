@@ -7,6 +7,18 @@ from database import engine
 
 models.Base.metadata.create_all(bind=engine)
 
+# Auto-seed para ambientes efêmeros (como Vercel)
+def check_and_seed():
+    from database import SessionLocal
+    import seed
+    db = SessionLocal()
+    count = db.query(models.User).count()
+    if count == 0:
+        seed.seed_db()
+    db.close()
+
+check_and_seed()
+
 app = FastAPI(title="Local Eats API", version="1.0.0")
 
 # SECURITY SMELL: allow origins is "*" (not safe for prod, good for class discussion)
