@@ -1,5 +1,8 @@
 // Configuração base da API
-const BASE_URL = 'http://127.0.0.1:8000';
+// Adaptado para Produção (Vercel): Se deixarmos 127.0.0.1, a aplicação em nuvem vai tentar buscar no PC de quem está acessando. 
+// Usar string vazia (ou window.location.origin) faz com que a API busque do próprio servidor do Vercel!
+const BASE_URL = ''; 
+
 // Mock de auth (usaremos o ID 2: User Teste)
 const MOCK_USER_ID = "2";
 
