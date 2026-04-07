@@ -4,20 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes | Local Eats</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 </head>
 <body>
     <header class="glass-header">
         <div class="container header-container">
-            <h1 class="logo"><a href="index.html" style="text-decoration:none; color:inherit;">Local<span class="accent">Eats</span></a></h1>
+            <a href="index.html" class="logo">Local<span class="accent">Eats</span></a>
             <nav>
                 <a href="index.html">Explorar</a>
                 <a href="profile.html">Meus Favoritos</a>
+                <a href="orders.html">Meus Pedidos</a>
             </nav>
             <div class="user-mock" id="userBadge">
-                <i class="ri-user-smile-line"></i> Visitante
+                <i class="ri-loader-4-line ri-spin"></i>
             </div>
         </div>
     </header>
@@ -28,46 +29,68 @@
         <div id="restaurantContent" class="hidden">
             <div class="detail-header">
                 <img id="restImage" src="" alt="Restaurant Image" class="detail-hero-img">
-                <!-- SMELL DE ACESSIBILIDADE E UX: esse botão flutua em cima do texto no mobile intencionalmente -->
                 <button id="favBtn" class="fav-btn-float"><i class="ri-heart-line"></i> Favoritar</button>
             </div>
             
             <div class="detail-info">
                 <div class="title-row">
                     <h2 id="restName">Nome do Restaurante</h2>
-                    <span id="restPrice" class="price-badge">$$$</span>
                 </div>
                 
-                <p class="meta-tags">
-                    <span id="restCuisine"><i class="ri-restaurant-2-line"></i> Culinária</span>
-                    <span id="restLocation"><i class="ri-map-pin-line"></i> Localização</span>
-                </p>
+                <div class="meta-tags">
+                    <span><i class="ri-restaurant-line"></i> <span id="restCuisine"></span></span>
+                    <span><i class="ri-map-pin-line"></i> <span id="restLocation"></span></span>
+                    <span id="restPrice" class="price-badge"></span>
+                </div>
                 
-                <p id="restDesc" class="description">Descrição deliciosa do lugar e sua história incrível.</p>
+                <p class="description" id="restDesc"></p>
             </div>
-
+            
             <div class="tabs">
-                <button class="tab-btn active" data-target="menuSec">Cardápio</button>
-                <button class="tab-btn" data-target="reviewSec">Avaliações</button>
+                <button class="tab-btn active" onclick="switchTab('menu')">Cardápio</button>
+                <button class="tab-btn" onclick="switchTab('reviews')">Avaliações</button>
             </div>
-
-            <div id="menuSec" class="tab-content active">
-                <h3>Nosso Cardápio</h3>
-                <div id="menuList" class="menu-list">
-                    <!-- Gerado pelo JS -->
+            
+            <div id="menuTab" class="tab-content active">
+                <div class="menu-list" id="menuList">
+                    <!-- Javascript Will Inject Here -->
                 </div>
             </div>
-
-            <div id="reviewSec" class="tab-content">
-                <h3>O que dizem sobre nós</h3>
-                <div id="reviewList" class="review-list">
-                    <!-- Gerado pelo JS -->
+            
+            <div id="reviewsTab" class="tab-content">
+                <div class="review-list" id="reviewList">
+                    <!-- Javascript Will Inject Here -->
                 </div>
             </div>
         </div>
     </main>
 
+    <!-- Floating Cart -->
+    <div class="floating-cart" id="floatingCart">
+        <div class="cart-header">
+            <span>Seu Pedido</span>
+            <span id="cartCountBadge" class="price-badge">0 itens</span>
+        </div>
+        <div class="cart-items" id="cartItemsList">
+            <!-- Items injected via JS -->
+        </div>
+        <div class="cart-total">
+            <span>Total:</span>
+            <span id="cartTotalValue">R$ 0,00</span>
+        </div>
+        <button class="checkout-btn" id="checkoutBtn">Finalizar Pedido</button>
+    </div>
+
+    <!-- Alert Modal Simples -->
+    <div id="orderSuccessModal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:var(--surface-color); padding:40px; border-radius:var(--radius-lg); z-index:9999; text-align:center; box-shadow:var(--shadow-strong); border:1px solid var(--border-color); backdrop-filter:blur(20px);">
+        <i class="ri-checkbox-circle-fill" style="font-size:60px; color:var(--primary-color);"></i>
+        <h2 style="margin:20px 0;">Pedido Realizado!</h2>
+        <p style="color:var(--text-muted); margin-bottom:25px;">Seu pedido de teste foi enviado com sucesso.</p>
+        <button class="primary-btn" onclick="window.location.href='orders.html'">Ver Detalhes</button>
+    </div>
+
     <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar | Local Eats</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <a href="index.html" class="logo" style="margin-bottom:10px; display:block;">Local<span class="accent">Eats</span></a>
+                <p style="color:var(--text-muted)">Bem-vindo ao app de Qualidade de Software</p>
+            </div>
+
+            <div class="auth-toggle">
+                <button class="auth-toggle-btn active" id="showLoginBtn">Entrar</button>
+                <button class="auth-toggle-btn" id="showRegisterBtn">Criar Conta</button>
+            </div>
+
+            <div id="errorMsg" class="error-msg">Erro ocorreu</div>
+
+            <!-- Formulário de Login -->
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" id="loginEmail" class="form-control" required placeholder="teste@teste.com">
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="loginPassword" class="form-control" required placeholder="Sua senha secreta">
+                </div>
+                <button type="submit" class="primary-btn">Entrar</button>
+            </form>
+
+            <!-- Formulário de Registro -->
+            <form id="registerForm" class="hidden">
+                <div class="form-group">
+                    <label>Nome Completo</label>
+                    <input type="text" id="regName" class="form-control" required placeholder="Seu nome">
+                </div>
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" id="regEmail" class="form-control" required placeholder="novo@teste.com">
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="regPassword" class="form-control" required placeholder="Min. 3 caracteres">
+                </div>
+                <button type="submit" class="primary-btn">Registrar</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Lógica da tela de login
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const showLoginBtn = document.getElementById('showLoginBtn');
+        const showRegisterBtn = document.getElementById('showRegisterBtn');
+        const errorMsg = document.getElementById('errorMsg');
+
+        function showError(msg) {
+            errorMsg.innerText = msg;
+            errorMsg.style.display = 'block';
+        }
+
+        showLoginBtn.addEventListener('click', () => {
+            loginForm.classList.remove('hidden');
+            registerForm.classList.add('hidden');
+            showLoginBtn.classList.add('active');
+            showRegisterBtn.classList.remove('active');
+            errorMsg.style.display = 'none';
+        });
+
+        showRegisterBtn.addEventListener('click', () => {
+            registerForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+            showRegisterBtn.classList.add('active');
+            showLoginBtn.classList.remove('active');
+            errorMsg.style.display = 'none';
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorMsg.style.display = 'none';
+            try {
+                const res = await API.login(
+                    document.getElementById('loginEmail').value,
+                    document.getElementById('loginPassword').value
+                );
+                if (res && res.user_id) {
+                    localStorage.setItem('userId', res.user_id);
+                    localStorage.setItem('userName', res.name);
+                    window.location.href = 'index.html';
+                }
+            } catch (err) {
+                showError(err.message || 'Falha no login');
+            }
+        });
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorMsg.style.display = 'none';
+            try {
+                const res = await API.register(
+                    document.getElementById('regName').value,
+                    document.getElementById('regEmail').value,
+                    document.getElementById('regPassword').value
+                );
+                if (res && res.id) {
+                    // Auto login success
+                    localStorage.setItem('userId', res.id);
+                    localStorage.setItem('userName', res.name);
+                    window.location.href = 'index.html';
+                }
+            } catch (err) {
+                showError(err.message || 'Falha ao registrar');
+            }
+        });
+    </script>
+</body>
+</html>

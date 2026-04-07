@@ -1,16 +1,20 @@
 // Configuração base da API
-// Adaptado para Produção (Vercel): Se deixarmos 127.0.0.1, a aplicação em nuvem vai tentar buscar no PC de quem está acessando. 
-// Usar string vazia (ou window.location.origin) faz com que a API busque do próprio servidor do Vercel!
 const BASE_URL = ''; 
 
-// Mock de auth (usaremos o ID 2: User Teste)
-const MOCK_USER_ID = "2";
+// Pega ID Dinamicamente
+function getUserId() {
+    return localStorage.getItem("userId") || "";
+}
 
 async function fetchAPI(endpoint, options = {}) {
     const defaultHeaders = {
         'Content-Type': 'application/json',
-        'user-id': MOCK_USER_ID
     };
+    
+    const uid = getUserId();
+    if(uid) {
+        defaultHeaders['user-id'] = uid;
+    }
 
     const config = {
         ...options,
@@ -20,25 +24,39 @@ async function fetchAPI(endpoint, options = {}) {
     try {
         const response = await fetch(`${BASE_URL}${endpoint}`, config);
         
-        // BUG INTENCIONAL: Se response falhar (ex: 500 ou 404), nós apenas logamos no console e não propomos feedback visual limpo na maioria das chamadas
         if (!response.ok) {
-            console.error(`Erro na API (${response.status}):`, await response.text());
-            return null;
+            const errBody = await response.text();
+            console.error(`Erro na API (${response.status}):`, errBody);
+            throw new Error(JSON.parse(errBody).detail || "Erro desconhecido da API");
         }
 
-        // Para requisições DELETE que não tem body
         if(response.status === 204 || response.headers.get('content-length') === '0') {
             return true;
         }
 
         return await response.json();
     } catch (err) {
-        console.error("Fetch Exception:", err);
-        return null;
+        throw err;
     }
 }
 
 const API = {
+    // Auth
+    login: (email, password) => {
+        return fetchAPI(`/users/login`, {
+            method: 'POST',
+            body: JSON.stringify({ email, password })
+        });
+    },
+    
+    register: (name, email, password) => {
+        return fetchAPI(`/users/register`, {
+            method: 'POST',
+            body: JSON.stringify({ name, email, password })
+        });
+    },
+
+    // Domínio Original
     getRestaurants: (params = {}) => {
         const query = new URLSearchParams(params).toString();
         const qs = query ? `?${query}` : '';
@@ -59,5 +77,18 @@ const API = {
     
     getUserProfile: () => {
         return fetchAPI(`/users/me`);
+    },
+
+    // Novo Domínio: Pedidos
+    createOrder: (restaurantId, items) => {
+        // items format: [{ menu_id: 1, quantity: 2 }]
+        return fetchAPI(`/orders/`, {
+            method: 'POST',
+            body: JSON.stringify({ restaurant_id: restaurantId, items: items })
+        });
+    },
+
+    getOrders: () => {
+        return fetchAPI(`/orders/`);
     }
 };
