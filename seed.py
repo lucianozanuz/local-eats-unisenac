@@ -3,10 +3,7 @@ from database import engine, SessionLocal
 import models
 
 def seed_db():
-    print("Dropping all tables to reset state...")
-    models.Base.metadata.drop_all(bind=engine)
-    print("Recreating tables...")
-    models.Base.metadata.create_all(bind=engine)
+    print("Database seeding started...")
     
     db = SessionLocal()
     
