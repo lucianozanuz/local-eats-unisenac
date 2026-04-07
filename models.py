@@ -61,3 +61,28 @@ class Favorite(Base):
 
     user = relationship("User", back_populates="favorites")
     restaurant = relationship("Restaurant", back_populates="favorited_by")
+
+class Order(Base):
+    __tablename__ = "orders"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    restaurant_id = Column(Integer, ForeignKey("restaurants.id"))
+    status = Column(String, default="PENDING") # e.g. PENDING, COMPLETED, CANCELLED
+    total_amount = Column(Float, default=0.0)
+
+    user = relationship("User")
+    restaurant = relationship("Restaurant")
+    items = relationship("OrderItem", back_populates="order")
+
+class OrderItem(Base):
+    __tablename__ = "order_items"
+
+    id = Column(Integer, primary_key=True, index=True)
+    order_id = Column(Integer, ForeignKey("orders.id"))
+    menu_id = Column(Integer, ForeignKey("menus.id"))
+    quantity = Column(Integer)
+    price_at_time = Column(Float) # Store the price at time of order
+
+    order = relationship("Order", back_populates="items")
+    menu = relationship("Menu")

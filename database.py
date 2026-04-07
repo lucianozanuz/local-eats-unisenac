@@ -4,15 +4,23 @@ from sqlalchemy.orm import sessionmaker
 
 import os
 
-# Adaptado para Vercel: Ambientes Serverless possuem sistema de arquivos "Read-Only" (somente leitura).
-# A única pasta com permissão de escrita nesses ambientes de nuvem é a "/tmp".
-database_path = "/tmp/local_eats.db" if os.environ.get("VERCEL") else "./local_eats.db"
-SQLALCHEMY_DATABASE_URL = f"sqlite:///{database_path}"
+# Configuração do Banco de Dados
+# Lemos do ambiente para suportar Supabase no Vercel. Caso contrário, usamos SQLite local.
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
-# Smell: Check_same_thread=False is needed for standard SQLite in FastAPI, but pooling is not optimized
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
+if DATABASE_URL:
+    SQLALCHEMY_DATABASE_URL = DATABASE_URL
+    # Se for Postgres, não precisamos do check_same_thread
+    engine = create_engine(SQLALCHEMY_DATABASE_URL)
+else:
+    # Fallback para SQLite local
+    database_path = "/tmp/local_eats.db" if os.environ.get("VERCEL") else "./local_eats.db"
+    SQLALCHEMY_DATABASE_URL = f"sqlite:///{database_path}"
+    # Smell: Check_same_thread=False is needed for standard SQLite in FastAPI
+    engine = create_engine(
+        SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+    )
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()

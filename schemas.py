@@ -72,3 +72,31 @@ class UserResp(UserBase):
 class UserLogin(BaseModel):
     email: str
     password: str
+
+# --- Order Schemas ---
+class OrderItemCreate(BaseModel):
+    menu_id: int
+    quantity: int
+
+class OrderCreate(BaseModel):
+    restaurant_id: int
+    items: List[OrderItemCreate]
+
+class OrderItemResp(BaseModel):
+    id: int
+    menu_id: int
+    quantity: int
+    price_at_time: float
+    menu: MenuResp
+    class Config:
+        from_attributes = True
+
+class OrderResp(BaseModel):
+    id: int
+    restaurant_id: int
+    user_id: int
+    status: str
+    total_amount: float
+    items: List[OrderItemResp] = []
+    class Config:
+        from_attributes = True

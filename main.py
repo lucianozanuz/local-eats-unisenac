@@ -30,10 +30,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from routers import restaurants, users
+from routers import restaurants, users, orders
 
 app.include_router(restaurants.router)
 app.include_router(users.router)
+app.include_router(orders.router)
 
 # Mount static files (Frontend HTML/CSS/JS)
 app.mount("/static", StaticFiles(directory="static"), name="static")

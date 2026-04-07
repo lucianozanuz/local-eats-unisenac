@@ -5,6 +5,24 @@ from database import get_db
 
 router = APIRouter(prefix="/users", tags=["users"])
 
+@router.post("/register", response_model=schemas.UserResp)
+def register_user(user_data: schemas.UserCreate, db: Session = Depends(get_db)):
+    # Very basic validation
+    existing_user = db.query(models.User).filter(models.User.email == user_data.email).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+        
+    # Smell: password not hashed
+    new_user = models.User(
+        name=user_data.name,
+        email=user_data.email,
+        password=user_data.password
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
+
 @router.post("/login")
 def login(user_data: schemas.UserLogin, db: Session = Depends(get_db)):
     # SMELL: Simple text comparison for password, mock login logic
