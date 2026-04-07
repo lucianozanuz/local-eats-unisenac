@@ -9,6 +9,10 @@ import os
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 if DATABASE_URL:
+    # SQLAlchemy 1.4+ requer "postgresql://" ao invés de "postgres://"
+    if DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+        
     SQLALCHEMY_DATABASE_URL = DATABASE_URL
     # Se for Postgres, não precisamos do check_same_thread
     engine = create_engine(SQLALCHEMY_DATABASE_URL)
